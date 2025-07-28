@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GroupMessenger02.MVVM.View.MainView"
+             xmlns:vm="clr-namespace:GroupMessenger02.MVVM.ViewModels"
+             x:DataType="vm:MessengerViewModel"
+             Title="Welcome to Chat">
+
+       <ContentPage.BindingContext>
+              <vm:MessengerViewModel/>
+       </ContentPage.BindingContext>
+
+       <StackLayout VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    Padding="20">
+              <Label Text="Enter Your Nickname"
+                     FontSize="Title"
+                     FontAttributes="Bold"
+                     HorizontalOptions="Center"
+                     Margin="0,0,0,20"/>
+
+              <Entry x:Name="UsernameEntry"
+                     Text="{Binding CurrentUser.Username, Mode=TwoWay}"
+                     Placeholder="Your nickname"
+                     WidthRequest="250"
+                     HorizontalTextAlignment="Center"
+                     Margin="0,0,0,20"/>
+
+              <Button Text="Connect to Server"
+                      Command="{Binding ConnectCommand}"
+                      BackgroundColor="#007BFF"
+                      TextColor="White"
+                      FontAttributes="Bold"
+                      WidthRequest="200"
+                      HeightRequest="50"
+                      CornerRadius="10"/>
+       </StackLayout>
+</ContentPage>
