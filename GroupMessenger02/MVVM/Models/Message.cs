@@ -10,6 +10,7 @@ namespace GroupMessenger02.MVVM.Models
         private string _content;
         private User _sender;
         private DateTime? _timestamp;
+        private string _chatid;
 
         [JsonPropertyName("id")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -67,6 +68,17 @@ namespace GroupMessenger02.MVVM.Models
             }
         }
 
+        [JsonPropertyName("chatid")]
+        public string ChatId
+        {
+            get => _chatid;
+            set
+            {
+                _chatid = value;
+                OnPropertyChanged();
+            }
+        }
+
         public Message()
         {
             Content = "";
@@ -74,12 +86,13 @@ namespace GroupMessenger02.MVVM.Models
         }
 
         // Constructor for received messages
-        public Message(string id, string content, User sender, DateTime timestamp)
+        public Message(string id, string content, User sender, DateTime timestamp, string chatid)
         {
             Id = id;
             Content = content;
             Sender = sender;
             Timestamp = timestamp;
+            ChatId = chatid;
         }
 
         // Convert to string for PacketBuilder (for sending to server)
@@ -87,7 +100,7 @@ namespace GroupMessenger02.MVVM.Models
         {
             // For sending to server: include sender and content
             // Format: "sender:content" (adjust based on your server's expected format)
-            return $"{Sender}:{Content}";
+            return $"{Sender}: {Content}";
         }
 
         // INotifyPropertyChanged for MVVM

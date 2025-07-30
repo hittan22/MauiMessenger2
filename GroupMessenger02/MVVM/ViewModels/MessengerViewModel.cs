@@ -12,9 +12,10 @@ namespace GroupMessenger02.MVVM.ViewModels
     {
         private readonly Server _server;
         private User _currentUser;
+        private Chat _currentChat;
         private Message _newMessage;
         private ObservableCollection<User> _users;
-        private ObservableCollection<Message> _messages;
+        private ObservableCollection<Chat> _chats;
         public ICommand ConnectCommand { get; }
         public ICommand SendMessageCommand { get; }
 
@@ -38,8 +39,9 @@ namespace GroupMessenger02.MVVM.ViewModels
                         ((Command)SendMessageCommand).ChangeCanExecute();
                     }
                 };
+            _currentChat = new Chat();
             _users = new ObservableCollection<User>();
-            _messages = new ObservableCollection<Message>();
+            _chats = new ObservableCollection<Chat>();
 
             ConnectCommand = new Command(
                 execute: async () => await ConnectAsync(),
@@ -64,6 +66,15 @@ namespace GroupMessenger02.MVVM.ViewModels
                 ((Command)ConnectCommand).ChangeCanExecute();
             }
         }
+        public Chat CurrentChat
+        {
+            get => _currentChat;
+            set
+            {
+                _currentChat = value;
+                OnPropertyChanged();
+            }
+        }
 
         public Message NewMessage
         {
@@ -86,12 +97,12 @@ namespace GroupMessenger02.MVVM.ViewModels
             }
         }
 
-        public ObservableCollection<Message> Messages
+        public ObservableCollection<Chat> Chats
         {
-            get => _messages;
+            get => _chats;
             set
             {
-                _messages = value;
+                _chats = value;
                 OnPropertyChanged();
             }
         }
@@ -110,10 +121,12 @@ namespace GroupMessenger02.MVVM.ViewModels
         }
 
 
-        private void LoadChat(User currUser)
+        private void LoadChat(User currUser, Chat main)
         {
             CurrentUser = currUser;
             NewMessage.Sender = CurrentUser;
+            CurrentChat = main;
+            Chats.Add(main);
             MainThread.BeginInvokeOnMainThread(async () =>
             {
                 await Application.Current.MainPage.Navigation.PushAsync(new MessengerView(this));
@@ -124,6 +137,7 @@ namespace GroupMessenger02.MVVM.ViewModels
         {
             try
             {
+                NewMessage.ChatId = CurrentChat.Id;
                 _server.SendMessageToServer(NewMessage);
                 NewMessage.Sender = CurrentUser;
                 NewMessage.Content = "";
@@ -144,7 +158,7 @@ namespace GroupMessenger02.MVVM.ViewModels
         private void MessageReceived()
         {
             Message msg = _server.packetReader.ReadMessage<Message>();
-            MainThread.BeginInvokeOnMainThread(() => Messages.Add(msg));
+            MainThread.BeginInvokeOnMainThread(() => _chats.Where(x => x.Id == msg.ChatId).First().Messages.Add(msg));
         }
 
         private void RemoveUser(User user)

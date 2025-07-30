@@ -15,7 +15,8 @@ namespace GroupMessenger02.Net
         public event Action ConnectedEvent;
         public event Action MsgReceivedEvent;
         public event Action<User> UserDisconnectedEvent;
-        public event Action<User> ConnectionSuccessful;
+        public event Action<User, Chat> ConnectionSuccessful;
+        public event Action<Chat> ChatRefreshEvent;
 
         public Server()
         {
@@ -68,7 +69,8 @@ namespace GroupMessenger02.Net
                                 break;
                             case 8:
                                 var userFromServer = packetReader.ReadMessage<User>();
-                                ConnectionSuccessful?.Invoke(userFromServer);
+                                var mainChat = packetReader.ReadMessage<Chat>();
+                                ConnectionSuccessful?.Invoke(userFromServer, mainChat);
                                 break;
                             case 10: // User disconnection
                                 var userDisconnected = packetReader.ReadMessage<User>();

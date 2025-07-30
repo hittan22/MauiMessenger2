@@ -2,53 +2,75 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="GroupMessenger02.MVVM.View.MessengerView">
-
-    <Grid RowDefinitions="*,Auto">
-
-        <!-- Messages list -->
-        <CollectionView Grid.Row="0"
-                        x:Name="MessagesView"
-                        ItemsSource="{Binding Messages}"
-                        Margin="10"
-                        SelectionMode="None">
+    <Grid ColumnDefinitions="180,*">
+        <CollectionView Grid.Column="0"
+                        x:Name="ChatsView"
+                        ItemsSource="{Binding Chats}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <Frame Padding="10"
                            Margin="0,5"
                            BackgroundColor="#2C2C2C">
                         <StackLayout>
-                            <Label Text="{Binding Sender.Username}"
+                            <Label Text="{Binding Name}"
+                                   VerticalTextAlignment="Center"
+                                   HorizontalTextAlignment="Center"
                                    FontAttributes="Bold"
                                    TextColor="#00BFFF"/>
-                            <Label Text="{Binding Content}"
-                                   TextColor="White"/>
-                            <Label Text="{Binding Timestamp, StringFormat='{0:HH:mm:ss}'}"
-                                   FontSize="Small"
-                                   TextColor="Gray"
-                                   HorizontalOptions="End"/>
                         </StackLayout>
                     </Frame>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
+
         </CollectionView>
+        <Grid Grid.Column="1"
+              RowDefinitions="*,Auto">
 
-        <!-- Input area -->
-        <StackLayout Grid.Row="1"
-                     Orientation="Horizontal"
-                     Padding="10"
-                     BackgroundColor="#1E1E1E"
-                     Spacing="10">
-            <Entry Text="{Binding NewMessage.Content, Mode=TwoWay}"
-                   Placeholder="Type your message"
-                   PlaceholderColor="Gray"
-                   TextColor="White"
-                   BackgroundColor="#2E2E2E"
-                   HorizontalOptions="FillAndExpand"/>
-            <Button Text="Send"
-                    Command="{Binding SendMessageCommand}"
-                    TextColor="White"
-                    BackgroundColor="#007BFF"/>
-        </StackLayout>
+            <!-- Messages list -->
+            <CollectionView Grid.Row="0"
+                            x:Name="MessagesView"
+                            ItemsSource="{Binding CurrentChat.Messages}"
+                            Margin="10"
+                            SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Padding="10"
+                               Margin="0,5"
+                               BackgroundColor="#2C2C2C">
+                            <StackLayout>
+                                <Label Text="{Binding Sender.Username}"
+                                       FontAttributes="Bold"
+                                       TextColor="#00BFFF"/>
+                                <Label Text="{Binding Content}"
+                                       TextColor="White"/>
+                                <Label Text="{Binding Timestamp, StringFormat='{0:HH:mm:ss}'}"
+                                       FontSize="Small"
+                                       TextColor="Gray"
+                                       HorizontalOptions="End"/>
+                            </StackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
 
+            <!-- Input area -->
+            <StackLayout Grid.Row="1"
+                         Orientation="Horizontal"
+                         Padding="10"
+                         BackgroundColor="#1E1E1E"
+                         Spacing="10">
+                <Entry Text="{Binding NewMessage.Content, Mode=TwoWay}"
+                       Placeholder="Type your message"
+                       PlaceholderColor="Gray"
+                       TextColor="White"
+                       BackgroundColor="#2E2E2E"
+                       HorizontalOptions="FillAndExpand"/>
+                <Button Text="Send"
+                        Command="{Binding SendMessageCommand}"
+                        TextColor="White"
+                        BackgroundColor="#007BFF"/>
+            </StackLayout>
+
+        </Grid>
     </Grid>
 </ContentPage>

@@ -68,11 +68,8 @@ namespace GroupMessenger02.MVVM.Models
             }
         }
         // Constructor for creating chats (before being sent to server for validation)
-        public Chat(User creator, string name)
+        public Chat()
         {
-            Users = new List<User>();
-            Users.Add(creator);
-            Name = name;
         }
 
         // Constructor for existing chats (when user added)
