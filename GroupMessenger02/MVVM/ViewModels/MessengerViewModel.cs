@@ -16,6 +16,7 @@ namespace GroupMessenger02.MVVM.ViewModels
         private Message _newMessage;
         private ObservableCollection<User> _users;
         private ObservableCollection<Chat> _chats;
+        private ObservableCollection<Message> _messages;
         public ICommand ConnectCommand { get; }
         public ICommand SendMessageCommand { get; }
 
@@ -39,6 +40,7 @@ namespace GroupMessenger02.MVVM.ViewModels
                         ((Command)SendMessageCommand).ChangeCanExecute();
                     }
                 };
+            _messages = new ObservableCollection<Message>();
             _currentChat = new Chat();
             _users = new ObservableCollection<User>();
             _chats = new ObservableCollection<Chat>();
@@ -86,6 +88,16 @@ namespace GroupMessenger02.MVVM.ViewModels
             }
         }
 
+        public ObservableCollection<Message> Messages
+        {
+            get => _messages;
+            set
+            {
+                _messages = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ObservableCollection<User> Users
         {
             get => _users;
@@ -125,6 +137,8 @@ namespace GroupMessenger02.MVVM.ViewModels
             CurrentUser = currUser;
             NewMessage.Sender = CurrentUser;
             CurrentChat = main;
+            Messages = new ObservableCollection<Message>(CurrentChat.Messages);
+            OnPropertyChanged(nameof(Messages));
             Chats.Add(main);
             MainThread.BeginInvokeOnMainThread(async () =>
             {
@@ -156,8 +170,12 @@ namespace GroupMessenger02.MVVM.ViewModels
 
         private void MessageReceived()
         {
-            Message msg = _server.packetReader.ReadMessage<Message>();
-            MainThread.BeginInvokeOnMainThread(() => _chats.Where(x => x.Id == msg.ChatId).First().Messages.Add(msg));
+            Message? msg = _server.packetReader.ReadMessage<Message>();
+            if (msg != null)
+            {
+                Messages.Add(msg);
+                MainThread.BeginInvokeOnMainThread(() => _chats.Where(x => x.Id == msg.ChatId).First().Messages.Add(msg));
+            }
         }
 
         private void RemoveUser(User user)

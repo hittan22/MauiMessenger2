@@ -32,7 +32,7 @@
             <!-- Messages list -->
             <CollectionView Grid.Row="0"
                             x:Name="MessagesView"
-                            ItemsSource="{Binding CurrentChat.Messages}"
+                            ItemsSource="{Binding Messages}"
                             Margin="10"
                             SelectionMode="None">
                 <CollectionView.ItemTemplate>
