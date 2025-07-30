@@ -48,8 +48,7 @@ namespace GroupMessenger02.MVVM.ViewModels
                 canExecute: () => !string.IsNullOrEmpty(CurrentUser.Username));
             SendMessageCommand = new Command(
                 execute: async () => await SendMessageAsync(),
-                canExecute: () => !string.IsNullOrEmpty(NewMessage.Content) && !string.IsNullOrEmpty(CurrentUser.Username));
-
+                canExecute: () => !string.IsNullOrEmpty(NewMessage.Content));
             _server.ConnectedEvent += UserConnected;
             _server.MsgReceivedEvent += MessageReceived;
             _server.UserDisconnectedEvent += RemoveUser;
